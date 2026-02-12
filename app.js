@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 10000;
+const port = process.env.PORT || 4000;
 
 app.get('/', (req, res) => {
     // 如果前面是寫相對路徑,那我們需要跟 express 說明確的根目錄是哪一個
@@ -27,4 +27,6 @@ app.use((req, res) => {
     res.status(404).sendFile('./views/404.html', { root: __dirname });
 })
 
-app.listen(port);
+app.listen ( port , () => {   
+  console.log ( `範例應用程式正在監聽連接埠$ { port } ` )
+})
