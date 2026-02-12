@@ -3,30 +3,31 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 app.get('/', (req, res) => {
-    // 如果前面是寫相對路徑,那我們需要跟 express 說明確的根目錄是哪一個
-    // res.sendFile('./views/index.html', { root: __dirname });
+    // 這樣寫是正確的，一次只回傳一個 JSON
     res.json({
         message: "test work!!!"
-    })
+    });
 });
 
 app.get('/about', (req, res) => {
-    // res.sendFile('./views/about.html', { root: __dirname });
     res.json({
         message: "about work!!!"
-    })
-})
+    });
+});
 
 // redirect
 app.get('/about-me', (req, res) => {
-    res.redirect('/about')
-})
+    res.redirect('/about');
+});
 
 // 404
+// 注意：如果你的專案裡沒有 ./views/404.html 這個檔案，這裡還是會報錯導致崩潰
 app.use((req, res) => {
-    res.status(404).sendFile('./views/404.html', { root: __dirname });
-})
+    res.status(404).json({ error: "Page not found" }); 
+    // 建議先用 JSON 測試，確定通了再換回 sendFile
+});
 
-app.listen ( port , () => {   
-  console.log ( `範例應用程式正在監聽連接埠$ { port } ` )
-})
+// 關鍵修改：加上 '0.0.0.0'
+app.listen(port, '0.0.0.0', () => {   
+    console.log(`範例應用程式正在監聽連接埠 ${port}`);
+});
