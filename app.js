@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 10000;
 
 app.get('/', (req, res) => {
     // 如果前面是寫相對路徑,那我們需要跟 express 說明確的根目錄是哪一個
