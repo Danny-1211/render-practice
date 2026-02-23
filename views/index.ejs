@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>go</title>
+    <title>go || <%= title %></title>
 </head>
 
 <body>
@@ -15,12 +15,20 @@
             <li><a href="/about">about page</a></li>
             <li><a href="/blogs/create">new blogs</a></li>
         </ul>
-        <h1>home</h1>
+        <h1><%= title %></h1>
+        <% if(show) {
+            %> <p>條件滿足</p> <%
+        } %>
+        <%- titleH2 %>
     </nav>
 
     <div class="blogs-content">
         <h2>all blogs</h2>
-        <p><%= name %></p>
+        <ul>
+            <% for(var i=0; i< foods.length; i++){ %>
+                <li><%-foods[i] %></li>
+            <% } %>
+        </ul>
     </div>
 </body>
 
