@@ -29,6 +29,16 @@
                 <li><%-foods[i] %></li>
             <% } %>
         </ul>
+
+        <% if (blogs.length) { %>
+            <ul>
+                <% blogs.forEach(blog => { %>
+                    <li><a href="/blogs/<%= blog.id %>"><%= blog.title %></a></li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>no blogs yet</p> 
+        <% } %>
     </div>
 </body>
 

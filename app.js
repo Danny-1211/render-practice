@@ -1,48 +1,104 @@
 const express = require('express');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
+const Blog = require('./models/blogs');
+require('dotenv').config();
+
 const app = express();
 const port = process.env.PORT || 3000;
+const dbUrl = process.env.MONGODB_URL;
+
+// --- 1. 設定 Middleware 與 View Engine ---
 const engine = require('ejs-locals');
 app.engine('ejs', engine);
 app.set('views', './views');
 app.set('view engine', 'ejs');
+app.use(morgan('dev'));
 
-app.use((req,res,next)=>{
-    console.log('new request made:');
-    console.log('host: ', req.hostname);
-    console.log('path: ', req.path);
-    console.log('method: ', req.method);
-    next();
-})
+// --- 2. 設定所有路由 (Routes) ---
+
+// add single blog 
+app.get('/add-blog', (req, res) => {
+    const blog = new Blog({
+        title: 'new blog 2232323',
+        snippet: 'about my new blog223232',
+        body: 'more about my new blog2323232'
+    });
+    blog.save()
+        .then((result) => {
+            res.send(result);
+        }).catch((err) => {
+            console.log(err);
+        });
+});
+
+// get all blogs
+app.get('/all-blogs', (req, res) => {
+    Blog.find()
+        .then((result) => {
+            res.send(result);
+        }).catch((err) => {
+            console.log(err);
+        });
+});
+
+// get specific blog content by id 
+app.get('/single-blog', (req, res) => {
+    Blog.findById('69a3f8f64ffd1e5cf0006368')
+        .then((result) => {
+            res.send(result);
+        }).catch((err) => {
+            console.log(err);
+        });
+});
 
 app.get('/', (req, res) => {
-    res.render('index', {
-        title: 'home',
-        titleH2: '<h2>第二級標題</h2>',
-        'show': true,
-        'foods': ['apple', 'banana', 'mongo']
-    })
+    res.redirect('/blogs');
 });
 
 app.get('/about', (req, res) => {
     res.render('about', {
         title: 'about',
-    })
+    });
 });
 
+app.get('/blogs', (req, res) => {
+    Blog.find().sort()
+        .then((result) => {
+            res.render('index', {
+                title: 'all blogs',
+                blogs: result,
+                show: true,
+                titleH2: 'all blogs H2222',
+                foods: ['apple', 'banana', 'orange']
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
 
 app.get('/blogs/create', (req, res) => {
     res.render('create', {
         title: 'create',
     });
-})
+});
 
-// 404
+// 404 (找不到網頁的路由，必須放在所有路由的最下方)
 app.use((req, res) => {
     res.status(404).render('404', {
         title: '404',
-    })
+    });
 });
 
-app.listen(port, '0.0.0.0', () => {
-    console.log(`範例應用程式正在監聽連接埠 ${port}`);
-});
+// --- 3. 最底部：確保連上資料庫後，才啟動伺服器 ---
+mongoose.connect(dbUrl)
+    .then((result) => {
+        console.log('connected to db');
+        
+        app.listen(port, '0.0.0.0', () => {
+            console.log(`範例應用程式正在監聽連接埠 ${port}`);
+        });
+    }).catch((err) => {
+        console.log('資料庫連線失敗：', err);
+    });
