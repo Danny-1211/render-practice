@@ -33,7 +33,7 @@
         <% if (blogs.length) { %>
             <ul>
                 <% blogs.forEach(blog => { %>
-                    <li><a href="/blogs/<%= blog.id %>"><%= blog.title %></a></li>
+                    <li><a href="/blogs/<%= blog._id %>"><%= blog.title %></a></li>
                 <% }) %>
             </ul>
         <% } else { %>

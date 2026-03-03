@@ -1,0 +1,59 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Blog Ninja | <%= title %>
+    </title>
+</head>
+
+<body>
+    <nav>
+        <div class="site-title">
+            <a href="/">
+                <h1>Blog Ninja</h1>
+            </a>
+            <p>A Net Ninja Site</p>
+        </div>
+        <ul>
+            <li><a href="/">Blogs</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/blogs/create">New Blog</a></li>
+        </ul>
+    </nav>
+
+    <div class="details content">
+        <h2>
+            <%= blog.title %>
+        </h2>
+        <div class="content">
+            <p>
+                <%= blog.body %>
+            </p>
+        </div>
+        <a class="delete" data-doc="<%= blog._id %>">delete</a>
+    </div>
+
+    <footer>
+        Copyright &copy; Blog Ninja 2020
+    </footer>
+
+    <script>
+        const trashcan = document.querySelector('a.delete');
+
+        trashcan.addEventListener('click', (e) => {
+            const endpoint = `/blogs/${trashcan.dataset.doc}`;
+
+            fetch(endpoint, {
+                method: 'DELETE',
+            })
+                .then(response => response.json())
+                .then(data => window.location.href = data.redirect)
+                .catch(err => console.log(err));
+        });
+
+    </script>
+</body>
+
+</html>
